@@ -1,0 +1,9 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "speed_camera_mats/base"
+	$phong 1
+
+	$phongexponent			5			// either/or
+	$phongboost				1.0
+	$phongfresnelranges		"[0 0.5 1]"
+}
