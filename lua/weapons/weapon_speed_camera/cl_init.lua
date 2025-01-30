@@ -28,9 +28,13 @@ function SWEP:PostDrawViewModel()
 
 	local traceHitPos = trace.HitPos
 	local quality = 20
+	local x = Vector(1.5, 1.5, 0.3)
 
 	cam.Start3D()
 	render.SetMaterial(material)
 	render.DrawWireframeSphere(traceHitPos, 10, quality, quality, color, true)
+	cam.IgnoreZ(true)
+	render.DrawBox(traceHitPos - (ow:GetAimVector():GetNormalized() * Vector(20, 20, 0)), Angle(0, ow:LocalEyeAngles().yaw + 45, 0), x, -x, color)
+	cam.IgnoreZ(false)
 	cam.End3D()
 end
