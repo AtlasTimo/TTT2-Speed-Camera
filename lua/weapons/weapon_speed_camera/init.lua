@@ -27,7 +27,7 @@ function SWEP:PrimaryAttack()
     local spawnPos = trace.HitPos + Vector(0, 0, 26)
 
     fanEnt:SetPos(spawnPos)
-    local modelAngle = Angle(-90, ow:EyeAngles()[2] - 90, 0)
+    local modelAngle = Angle(-90, ow:EyeAngles()[2] + 90, 0)
     fanEnt:SetAngles(modelAngle)
 
     ow:StripWeapon("weapon_speed_camera")
