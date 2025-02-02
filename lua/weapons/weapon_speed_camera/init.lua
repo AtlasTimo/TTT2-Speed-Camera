@@ -19,16 +19,18 @@ function SWEP:PrimaryAttack()
 
     ow.lastSpeedCameraExecution = CurTime()
 
-    local fanEnt = ents.Create("ent_ttt_speed_camera")
-
-    fanEnt:Spawn()
-    fanEnt:SetOwner(ow)
+    local ent = ents.Create("ent_ttt_speed_camera")
+    ent:SetNWString("speedCameraName", "ttt_speed_camera")
+    ent:SetNWInt("charges", TTT_SPEED_CAMERA.CVARS.speed_camera_charges)
+    ent:Spawn()
+    ent:SetName("ttt_speed_camera")
+    ent.Owner = ow
 
     local spawnPos = trace.HitPos + Vector(0, 0, 26)
 
-    fanEnt:SetPos(spawnPos)
+    ent:SetPos(spawnPos)
     local modelAngle = Angle(-90, ow:EyeAngles()[2] + 90, 0)
-    fanEnt:SetAngles(modelAngle)
+    ent:SetAngles(modelAngle)
 
     ow:StripWeapon("weapon_speed_camera")
 end

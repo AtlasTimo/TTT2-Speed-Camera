@@ -4,10 +4,6 @@ local material = Material("vgui/white")
 local colorgreen = Color(0, 255, 0)
 local colorred = Color(205, 0, 0)
 
-function SWEP:Initialize()
-    self:CreateGhostModel()
-end
-
 function SWEP:PostDrawViewModel()
 	local ow = self:GetOwner()
 	if (ow ~= LocalPlayer()) then return end
@@ -60,6 +56,10 @@ function SWEP:RemoveGhostModel()
         self.GhostModel:Remove()
         self.GhostModel = nil
     end
+end
+
+function SWEP:Deploy()
+    self:CreateGhostModel()
 end
 
 function SWEP:Holster()
