@@ -3,12 +3,6 @@ include("shared.lua")
 local color = Color(206, 0, 0)
 
 function ENT:Initialize()
-    self.charges = TTT_SPEED_CAMERA.CVARS.speed_camera_charges
-
-    net.Receive("SpeedCameraChargesChanged", function()
-        self.charges = net.ReadInt(32)
-    end)
-
     hook.Add("HUDPaint", self, function()
         if (LocalPlayer():GetTeam() ~= "traitors") then return end
 
@@ -19,11 +13,12 @@ function ENT:Initialize()
         screenPos = textPos:ToScreen()
         cam.End3D()
 
+        local distance = (self:GetPos() - LocalPlayer():GetPos()):Length() * 0.01905
         cam.Start2D()
-        draw.DrawText("Speed camera\n" .. tostring(math.floor((self:GetPos() - LocalPlayer():GetPos()):Length())) .. "\nCharges: " .. self.charges, "Default", screenPos.x, screenPos.y, color, TEXT_ALIGN_CENTER)
+        draw.DrawText("Speed camera\n" .. string.format("%.2f m", distance), "Default", screenPos.x, screenPos.y, color, TEXT_ALIGN_CENTER)
         cam.End2D()
 
-        if (not LocalPlayer():IsLineOfSightClear(self:GetPos()) || not TTT_SPEED_CAMERA.CVARS.speed_camera_show_range) then return end
+        if (not LocalPlayer():IsLineOfSightClear(self:GetPos()) or not TTT_SPEED_CAMERA.CVARS.speed_camera_show_range or self:GetNWInt("charges", TTT_SPEED_CAMERA.CVARS.speed_camera_charges) <= 0) then return end
 
         cam.Start3D()
         render.DrawLine(self:GetPos(), self:GetPos() + self:GetRight() * TTT_SPEED_CAMERA.CVARS.speed_camera_range, color, true)
