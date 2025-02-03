@@ -25,6 +25,14 @@ function CLGAMEMODESUBMENU:Populate(parent)
 		decimal = 0
 	})
 
+	form:MakeSlider({
+		label = "label_speed_camera_trigger_speed",
+		serverConvar = "ttt_speed_camera_trigger_speed",
+		min = 1,
+		max = 1000,
+		decimal = 0
+	})
+
 	local form2 = vgui.CreateTTT2Form(parent, "help_speed_camera_team")
 
 	form2:MakeCheckBox({
