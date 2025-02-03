@@ -4,6 +4,7 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 util.AddNetworkString("SpeedCameraChargesChanged")
+util.AddNetworkString("TTT2_Speed_Camera_OwnerPopup")
 local shuttersound = Sound("shutter_sound.ogg")
 
 function ENT:Initialize()
@@ -43,8 +44,8 @@ function ENT:Think()
 
 	for i, v in pairs(allEnts) do
 		if (v:IsPlayer() and v:Alive() and v:GetObserverMode() == OBS_MODE_NONE and v:IsLineOfSightClear(self:GetPos())) then
-			if (v:GetVelocity():Length() < 300 or (not TTT_SPEED_CAMERA.CVARS.speed_camera_friendly_fire and v:GetTeam() == ow:GetTeam())) then continue end
-			if (v.lastSpeedCameraExecution == nil or v.lastSpeedCameraExecution + 5 < CurTime()) then
+			if (v:GetVelocity():Length() < TTT_SPEED_CAMERA.CVARS.speed_camera_trigger_speed or (not TTT_SPEED_CAMERA.CVARS.speed_camera_friendly_fire and v:GetTeam() == ow:GetTeam())) then continue end
+			if (v.lastSpeedCameraExecution == nil or v.lastSpeedCameraExecution + 3 < CurTime()) then
 				local playeraimvector = Vector(v:GetAimVector().x, v:GetAimVector().y, 0)
 				local speedcameraaimvector = self.richtungsVektor * -1
 				local currentangle = 	(playeraimvector.x * speedcameraaimvector.x + playeraimvector.y * speedcameraaimvector.y + playeraimvector.z * speedcameraaimvector.z) / 
@@ -57,11 +58,22 @@ function ENT:Think()
 					self:EmitSound(shuttersound, 100, 100, 1)
 					self.flash:SetPos(flashpos)
 					self.flash:Fire("Color", "255 40 40 255", "0")
-					self.flash:Fire("Color", "0 0 0 0", "0.01")
+					self.flash:Fire("Color", "0 0 0 0", "0.05")
+					local dmg = DamageInfo()
+					dmg:SetAttacker(ow)
+					dmg:SetInflictor(self)
+					dmg:SetDamageType(DMG_BULLET)
 					if (v:GetTeam() == ow:GetTeam()) then
-						v:TakeDamage(TTT_SPEED_CAMERA.CVARS.speed_camera_teammates_damage, ow, nil)
+						dmg:SetDamage(TTT_SPEED_CAMERA.CVARS.speed_camera_teammates_damage)
+						v:TakeDamageInfo(dmg)
 					else
-						v:TakeDamage(TTT_SPEED_CAMERA.CVARS.speed_camera_enemy_damage, ow, nil)
+						dmg:SetDamage(TTT_SPEED_CAMERA.CVARS.speed_camera_enemy_damage)
+						v:TakeDamageInfo(dmg)
+					end
+					if (not v:Alive() and ow:IsPlayer() and ow:Alive() and ow:GetObserverMode() == OBS_MODE_NONE) then
+						ow:AddCredits(1)
+						net.Start("TTT2_Speed_Camera_OwnerPopup")
+    					net.Send(ow)
 					end
 					v.lastSpeedCameraExecution = CurTime()
 					charges = charges - 1;

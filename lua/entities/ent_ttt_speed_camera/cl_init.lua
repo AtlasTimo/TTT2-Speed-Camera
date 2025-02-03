@@ -3,6 +3,17 @@ include("shared.lua")
 local color = Color(206, 0, 0)
 
 function ENT:Initialize()
+    net.Receive("TTT2_Speed_Camera_OwnerPopup", function()
+        local icon = Material("vgui/ttt/weapon_speed_camera_gun.png") -- Lade das Material
+
+        MSTACK:AddColoredImagedMessage(
+            "Earned 1 Credit",
+            Color(205, 0, 0),
+            icon,
+            "Speed Camera"
+        )
+    end)
+
     hook.Add("HUDPaint", self, function()
         if (LocalPlayer():GetTeam() ~= "traitors") then return end
 
