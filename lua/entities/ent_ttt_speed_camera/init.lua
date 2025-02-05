@@ -71,8 +71,8 @@ function ENT:Think()
 						v:TakeDamageInfo(dmg)
 					end
 					if (not v:Alive() and ow:IsPlayer() and ow:Alive() and ow:GetObserverMode() == OBS_MODE_NONE) then
-						ow:AddCredits(1)
 						net.Start("TTT2_Speed_Camera_OwnerPopup")
+						net.WritePlayer(v)
     					net.Send(ow)
 					end
 					v.lastSpeedCameraExecution = CurTime()

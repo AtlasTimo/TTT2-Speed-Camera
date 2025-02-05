@@ -5,9 +5,10 @@ local color = Color(206, 0, 0)
 function ENT:Initialize()
     net.Receive("TTT2_Speed_Camera_OwnerPopup", function()
         local icon = Material("vgui/ttt/weapon_speed_camera_gun.png") -- Lade das Material
+        local victim = net.ReadPlayer()
 
         MSTACK:AddColoredImagedMessage(
-            "Earned 1 Credit",
+            "You have killed " .. victim:GetName() .. ".",
             Color(205, 0, 0),
             icon,
             "Speed Camera"
